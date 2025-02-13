@@ -4,7 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'package:tazkartak_app/src/presentation/mangers/section/section_screen_states.dart';
 import 'package:tazkartak_app/src/presentation/views/screens/profile_screen.dart';
 
-import '../../views/screens/home_screen.dart';
+import '../../views/screens/home/home_screen.dart';
 import '../../views/screens/tikets_hitory/line_metro.dart';
 
 @injectable

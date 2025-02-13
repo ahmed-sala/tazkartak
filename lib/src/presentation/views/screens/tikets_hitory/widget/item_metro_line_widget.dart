@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:tazkartak_app/src/presentation/views/screens/tikets_hitory/line_metro.dart';
 
 import '../../../../mangers/section/tazkarat_view_model/core/metro_seclection_model.dart';
 

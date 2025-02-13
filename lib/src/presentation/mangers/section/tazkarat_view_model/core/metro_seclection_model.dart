@@ -2,8 +2,8 @@ class MetroStationModel {
   final String name;
   final double latitude;
   final double longitude;
-
-  MetroStationModel({required this.name, required this.latitude, required this.longitude});
+  final String  exchangeWithFonts;
+  MetroStationModel({ this.exchangeWithFonts="", required this.name, required this.latitude, required this.longitude});
 }
 List<MetroStationModel> metroStationsOne = [
   MetroStationModel(name: "حلوان", latitude: 29.8440, longitude: 31.3008),
@@ -24,10 +24,10 @@ List<MetroStationModel> metroStationsOne = [
   MetroStationModel(name: "الملك الصالح", latitude: 30.0519, longitude: 31.2359),
   MetroStationModel(name: "السيدة زينب", latitude: 30.0535, longitude: 31.2314),
   MetroStationModel(name: "سعد زغلول", latitude: 30.0562, longitude: 31.2282),
-  MetroStationModel(name: "أنور السادات", latitude: 30.0444, longitude: 31.2357),
-  MetroStationModel(name: "جمال عبد الناصر", latitude: 30.0525, longitude: 31.2398),
+  MetroStationModel(name: "أنور السادات", latitude: 30.0444, longitude: 31.2357, exchangeWithFonts: " line 2 "),
+  MetroStationModel(name: "جمال عبد الناصر", latitude: 30.0525, longitude: 31.2398,exchangeWithFonts: "line 3 "),
   MetroStationModel(name: "أحمد عرابي", latitude: 30.0567, longitude: 31.2435),
-  MetroStationModel(name: "الشهداء", latitude: 30.0631, longitude: 31.2472),
+  MetroStationModel(name: "الشهداء", latitude: 30.0631, longitude: 31.2472,exchangeWithFonts: "line 2"),
   MetroStationModel(name: "غمرة", latitude: 30.0692, longitude: 31.2554),
   MetroStationModel(name: "الدمرداش", latitude: 30.0753, longitude: 31.2619),
   MetroStationModel(name: "منشية الصدر", latitude: 30.0815, longitude: 31.2682),
@@ -52,10 +52,10 @@ List<MetroStationModel> metroStationsTwo = [
   MetroStationModel(name: "البحوث", latitude: 30.0355, longitude: 31.2138),
   MetroStationModel(name: "الدقي", latitude: 30.0427, longitude: 31.2243),
   MetroStationModel(name: "الأوبرا", latitude: 30.0444, longitude: 31.2315),
-  MetroStationModel(name: "أنور السادات", latitude: 30.0444, longitude: 31.2357),
+  MetroStationModel(name: "أنور السادات", latitude: 30.0444, longitude: 31.2357,exchangeWithFonts: "line 1"),
   MetroStationModel(name: "محمد نجيب", latitude: 30.0456, longitude: 31.2440),
-  MetroStationModel(name: "العتبة", latitude: 30.0485, longitude: 31.2480),
-  MetroStationModel(name: "الشهداء", latitude: 30.0535, longitude: 31.2464),
+  MetroStationModel(name: "العتبة", latitude: 30.0485, longitude: 31.2480,exchangeWithFonts: "line 3"),
+  MetroStationModel(name: "الشهداء", latitude: 30.0535, longitude: 31.2464,exchangeWithFonts: "line 1"),
   MetroStationModel(name: "مسرة", latitude: 30.0640, longitude: 31.2465),
   MetroStationModel(name: "روض الفرج", latitude: 30.0721, longitude: 31.2458),
   MetroStationModel(name: "سانتا تريزا", latitude: 30.0763, longitude: 31.2450),
@@ -83,8 +83,8 @@ List<MetroStationModel> metroStationsThree = [
   MetroStationModel(name: "عبده باشا", latitude: 30.1845, longitude: 31.2800),
   MetroStationModel(name: "الجيش", latitude: 30.1890, longitude: 31.2740),
   MetroStationModel(name: "باب الشعرية", latitude: 30.1935, longitude: 31.2680),
-  MetroStationModel(name: "العتبة", latitude: 30.1980, longitude: 31.2620),
-  MetroStationModel(name: "جمال عبد الناصر", latitude: 30.2030, longitude: 31.2560),
+  MetroStationModel(name: "العتبة", latitude: 30.1980, longitude: 31.2620,exchangeWithFonts: "line 2 "),
+  MetroStationModel(name: "جمال عبد الناصر", latitude: 30.2030, longitude: 31.2560,exchangeWithFonts: "line 1"),
   MetroStationModel(name: "ماسبيرو", latitude: 30.2080, longitude: 31.2500),
   MetroStationModel(name: "صفاء حجازي", latitude: 30.2130, longitude: 31.2445),
   MetroStationModel(name: "الكيت كات", latitude: 30.2180, longitude: 31.2390),
@@ -98,7 +98,7 @@ List<MetroStationModel> metroStationsThree = [
   MetroStationModel(name: "وادي النيل", latitude: 30.2580, longitude: 31.2005),
   MetroStationModel(name: "جامعة الدول العربية", latitude: 30.2630, longitude: 31.1960),
   MetroStationModel(name: "بولاق الدكرور", latitude: 30.2680, longitude: 31.1915),
-  MetroStationModel(name: "جامعة القاهرة", latitude: 30.2730, longitude: 31.1870),
+  MetroStationModel(name: "جامعة القاهرة", latitude: 30.2730, longitude: 31.1870,exchangeWithFonts: "line 2"),
 ];
 List<MetroStationModel>metroSelection=[];
 
