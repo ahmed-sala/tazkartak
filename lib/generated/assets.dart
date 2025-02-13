@@ -6,3 +6,8 @@ class Assets {
   static const String imagesLogo = 'assets/images/logo.png';
   static const String imagesSplashLogo = 'assets/images/splash_logo.png';
 }
+
+
+
+
+
