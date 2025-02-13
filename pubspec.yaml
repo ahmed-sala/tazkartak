@@ -35,8 +35,11 @@ dependencies:
   flutter_bloc:
   get_it:
   injectable:
+  qr_flutter: ^4.0.0
+
+
   dio:
-  retrofit:
+  retrofit: ^4.4.2
   logger:
   json_annotation: ^4.9.0
   awesome_dialog: ^3.2.1

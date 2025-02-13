@@ -1,1 +1,3 @@
-abstract interface class PaymentRepo {}
+abstract interface class PaymentRepo {
+  Future<void> processPayment(String amount, String currency);
+}

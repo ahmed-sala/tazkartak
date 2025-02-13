@@ -19,3 +19,7 @@ class GetRoutesFailuresState extends HomeState {
   final String errorMassage;
   GetRoutesFailuresState({required this.errorMassage});
 }
+
+class CancelPaymentState extends HomeState {}
+
+class PaymentSuccessState extends HomeState {}

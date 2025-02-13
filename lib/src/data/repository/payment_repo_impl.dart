@@ -8,4 +8,9 @@ class PaymentRepoImpl implements PaymentRepo {
   PaymentDatasource paymentDatasource;
 
   PaymentRepoImpl(this.paymentDatasource);
+  @override
+  Future<void> processPayment(String amount, String currency) async {
+    await paymentDatasource.initPaymentSheet(amount, currency);
+    await paymentDatasource.presentPaymentSheet();
+  }
 }

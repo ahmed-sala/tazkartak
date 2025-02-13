@@ -6,4 +6,7 @@ class PaymentUsecase {
   PaymentRepo paymentRepo;
 
   PaymentUsecase(this.paymentRepo);
+  Future<void> executePayment(String amount, String currency) async {
+    await paymentRepo.processPayment(amount, currency);
+  }
 }

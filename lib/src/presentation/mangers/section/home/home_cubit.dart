@@ -1,9 +1,12 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:injectable/injectable.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
+import 'package:tazkartak_app/src/domain/usecase/payment_usecase.dart';
 import 'package:tazkartak_app/src/presentation/mangers/section/home/home_action.dart';
 import 'package:tazkartak_app/src/presentation/mangers/section/home/home_state.dart';
 import 'package:tazkartak_app/src/presentation/mangers/section/tazkarat_view_model/core/metro_seclection_model.dart';
@@ -16,7 +19,8 @@ import '../../../../../core/service/open_route_servie/open_route_service_api.dar
 class HomeCubit extends Cubit<HomeState> {
   LocationManger locationManger;
   OpenRouteServiceApi openRouteServiceApi;
-  HomeCubit(this.locationManger, this.openRouteServiceApi)
+  PaymentUsecase paymentUsecase;
+  HomeCubit(this.locationManger, this.openRouteServiceApi, this.paymentUsecase)
       : super(HomeStateInitialState());
 
   bool _isPermissionLocationUser = false;
@@ -132,6 +136,26 @@ class HomeCubit extends Cubit<HomeState> {
         metroLatitude = element.latitude;
         metroLongitude = element.longitude;
         return;
+      }
+    }
+  }
+
+  Future<void> openStripePaymentSheet() async {
+    try {
+      // Trigger the payment sheet (this shows the Stripe UI)
+      await paymentUsecase.executePayment("5000", "EGP");
+      // If successful, emit a success state
+      emit(PaymentSuccessState());
+      debugPrint('Payment completed successfully.');
+    } on StripeException catch (e) {
+      if (e.error.code == FailureCode.Canceled ||
+          e.error.localizedMessage!.toLowerCase().contains('cancel')) {
+        // Emit a cancellation state if the user cancels the payment
+        emit(CancelPaymentState());
+        debugPrint('Payment sheet closed by user. No navigation.');
+      } else {
+        // Handle other errors appropriately
+        debugPrint('Stripe error: ${e.error.localizedMessage}');
       }
     }
   }
