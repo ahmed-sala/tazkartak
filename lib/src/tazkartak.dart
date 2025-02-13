@@ -4,7 +4,6 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tazkartak_app/core/routes/routes_name.dart';
 import 'package:tazkartak_app/core/service/location_manger/location_manger_impl.dart';
-import 'package:tazkartak_app/core/service/open_route_servie/open_route_service_api.dart';
 import 'package:tazkartak_app/core/service/open_route_servie/open_route_service_api_impl.dart';
 import 'package:tazkartak_app/src/presentation/mangers/section/home/home_cubit.dart';
 
@@ -48,13 +47,13 @@ class _TazkartakAppState extends State<TazkartakApp> {
           .shrink(); // Display nothing until initialization is complete
     }
     return BlocProvider(
-      create: (context) => HomeCubit(LocationMangerImpl(), OpenRouteServiceApiImpl()),
+      create: (context) =>
+          HomeCubit(LocationMangerImpl(), OpenRouteServiceApiImpl()),
       child: ScreenUtilInit(
           designSize: const Size(375, 812),
           minTextAdapt: true,
           splitScreenMode: true,
-          builder: (context, child) =>
-              MaterialApp(
+          builder: (context, child) => MaterialApp(
                 debugShowCheckedModeBanner: false,
                 title: 'Tazkartak',
                 navigatorKey: navKey,

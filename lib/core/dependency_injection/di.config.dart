@@ -27,11 +27,16 @@ import '../../src/presentation/mangers/auth/profile/profile_viewmodel.dart'
     as _i902;
 import '../../src/presentation/mangers/auth/register/register_viewmodel.dart'
     as _i853;
+import '../../src/presentation/mangers/section/home/home_cubit.dart' as _i446;
 import '../../src/presentation/mangers/section/section_Screen_viewmodel.dart'
     as _i290;
 import '../helpers/firestore/firestore_module.dart' as _i929;
 import '../helpers/firestore/firestore_services.dart' as _i769;
 import '../helpers/shared_pref/shared_pref_module.dart' as _i976;
+import '../service/location_manger/location_manger.dart' as _i861;
+import '../service/location_manger/location_manger_impl.dart' as _i877;
+import '../service/open_route_servie/open_route_service_api.dart' as _i938;
+import '../service/open_route_servie/open_route_service_api_impl.dart' as _i107;
 
 extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -56,18 +61,25 @@ extension GetItInjectableX on _i174.GetIt {
         () => firebaseModule.firebaseFirestore);
     gh.lazySingleton<_i558.FlutterSecureStorage>(
         () => sharedPrefModule.secureStorage);
+    gh.factory<_i861.LocationManger>(() => _i877.LocationMangerImpl());
+    gh.factory<_i938.OpenRouteServiceApi>(
+        () => _i107.OpenRouteServiceApiImpl());
     gh.factory<_i769.FirestoreService>(
         () => _i769.FirestoreService(gh<_i974.FirebaseFirestore>()));
+    gh.factory<_i446.HomeCubit>(() => _i446.HomeCubit(
+          gh<_i861.LocationManger>(),
+          gh<_i938.OpenRouteServiceApi>(),
+        ));
     gh.factory<_i49.AuthDataSource>(
         () => _i1005.AuthDatasourceImpl(gh<_i769.FirestoreService>()));
     gh.factory<_i146.AuthRepo>(
         () => _i644.AuthRepoImpl(gh<_i49.AuthDataSource>()));
     gh.factory<_i601.LoginUsecase>(
         () => _i601.LoginUsecase(gh<_i146.AuthRepo>()));
-    gh.factory<_i293.RegisterUsecase>(
-        () => _i293.RegisterUsecase(gh<_i146.AuthRepo>()));
     gh.factory<_i117.ProfileUsecase>(
         () => _i117.ProfileUsecase(gh<_i146.AuthRepo>()));
+    gh.factory<_i293.RegisterUsecase>(
+        () => _i293.RegisterUsecase(gh<_i146.AuthRepo>()));
     gh.factory<_i853.RegisterViewmodel>(
         () => _i853.RegisterViewmodel(gh<_i293.RegisterUsecase>()));
     gh.factory<_i902.ProfileViewmodel>(
