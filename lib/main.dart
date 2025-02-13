@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:tazkartak_app/src/presentation/views/screens/stripe_service.dart';
 import 'package:tazkartak_app/src/tazkartak.dart';
 
 import 'core/dependency_injection/di.dart';
@@ -10,6 +11,8 @@ import 'core/utils/bloc_observer/bloc_observer.dart';
 import 'firebase_options.dart';
 
 void main() async {
+  StripeService.init();
+
   WidgetsBinding widgetsFlutterBinding =
       WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(

@@ -1,20 +1,26 @@
 import 'dart:math';
-import 'package:bloc/bloc.dart';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:injectable/injectable.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
+import 'package:tazkartak_app/src/domain/usecase/payment_usecase.dart';
 import 'package:tazkartak_app/src/presentation/mangers/section/home/home_action.dart';
 import 'package:tazkartak_app/src/presentation/mangers/section/home/home_state.dart';
 import 'package:tazkartak_app/src/presentation/mangers/section/tazkarat_view_model/core/metro_seclection_model.dart';
-import 'package:tazkartak_app/src/presentation/mangers/section/tazkarat_view_model/core/metro_seclection_model.dart';
+
 import '../../../../../core/common/api/api_result.dart';
 import '../../../../../core/service/location_manger/location_manger.dart';
 import '../../../../../core/service/open_route_servie/open_route_service_api.dart';
+
 @injectable
 class HomeCubit extends Cubit<HomeState> {
   LocationManger locationManger;
   OpenRouteServiceApi openRouteServiceApi;
-  HomeCubit(this.locationManger, this.openRouteServiceApi)
+  PaymentUsecase paymentUsecase;
+  HomeCubit(this.locationManger, this.openRouteServiceApi, this.paymentUsecase)
       : super(HomeStateInitialState());
 
   bool _isPermissionLocationUser = false;
@@ -24,8 +30,7 @@ class HomeCubit extends Cubit<HomeState> {
   double userLatitude = 0;
   List<LatLng> routesPoint = [];
 
-  Future<void> doAction(
-      {required HomeAction homeAction}) async {
+  Future<void> doAction({required HomeAction homeAction}) async {
     switch (homeAction) {
       case GetLocationUserDataAction():
         return await _getLocationUserData();
@@ -43,7 +48,8 @@ class HomeCubit extends Cubit<HomeState> {
         LocationData locationData = await locationManger.getLocationUser();
         userLatitude = locationData.latitude ?? 0.0;
         userLongitude = locationData.longitude ?? 0.0;
-        nearestMetroStation = _findNearestMetroStation(userLatitude, userLongitude);
+        nearestMetroStation =
+            _findNearestMetroStation(userLatitude, userLongitude);
         getNMetroLocation(nearestMetroStation);
         emit(GetLocationUserSuccessState());
         _getRoutes();
@@ -74,7 +80,6 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-
   List<MetroStationModel> metroStations = [
     ...metroStationsOne,
     ...metroStationsTwo,
@@ -89,7 +94,10 @@ class HomeCubit extends Cubit<HomeState> {
 
     for (var station in metroStations) {
       double distance = _calculateDistance(
-        userLat, userLng, station.latitude, station.longitude,
+        userLat,
+        userLng,
+        station.latitude,
+        station.longitude,
       );
 
       if (distance < minDistance) {
@@ -99,7 +107,9 @@ class HomeCubit extends Cubit<HomeState> {
     }
     return closestStation;
   }
-  double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+
+  double _calculateDistance(
+      double lat1, double lon1, double lat2, double lon2) {
     const double R = 6371; // نصف قطر الأرض بالكيلومترات
     double dLat = _degreesToRadians(lat2 - lat1);
     double dLon = _degreesToRadians(lon2 - lon1);
@@ -112,23 +122,41 @@ class HomeCubit extends Cubit<HomeState> {
     double c = 2 * atan2(sqrt(a), sqrt(1 - a));
     return R * c;
   }
+
   double _degreesToRadians(double degrees) {
     return degrees * pi / 180;
   }
 
-
-
-  void getNMetroLocation(String ?  text){
-    if(text ==null || text == "من فضلك افتج location "){
-      return ;
+  void getNMetroLocation(String? text) {
+    if (text == null || text == "من فضلك افتج location ") {
+      return;
     }
     for (var element in metroStations) {
-      if(element.name==text){
-        metroLatitude=element.latitude;
-        metroLongitude=element.longitude;
+      if (element.name == text) {
+        metroLatitude = element.latitude;
+        metroLongitude = element.longitude;
         return;
       }
-    }}
+    }
+  }
 
-
+  Future<void> openStripePaymentSheet() async {
+    try {
+      // Trigger the payment sheet (this shows the Stripe UI)
+      await paymentUsecase.executePayment("5000", "EGP");
+      // If successful, emit a success state
+      emit(PaymentSuccessState());
+      debugPrint('Payment completed successfully.');
+    } on StripeException catch (e) {
+      if (e.error.code == FailureCode.Canceled ||
+          e.error.localizedMessage!.toLowerCase().contains('cancel')) {
+        // Emit a cancellation state if the user cancels the payment
+        emit(CancelPaymentState());
+        debugPrint('Payment sheet closed by user. No navigation.');
+      } else {
+        // Handle other errors appropriately
+        debugPrint('Stripe error: ${e.error.localizedMessage}');
+      }
+    }
+  }
 }
