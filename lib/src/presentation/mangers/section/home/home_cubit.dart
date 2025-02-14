@@ -143,10 +143,10 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  Future<void> openStripePaymentSheet() async {
+  Future<void> openStripePaymentSheet(String price) async {
     try {
       // Trigger the payment sheet (this shows the Stripe UI)
-      await paymentUsecase.executePayment("5000", "EGP");
+      await paymentUsecase.executePayment(price, "EGP");
       // If successful, emit a success state
       emit(PaymentSuccessState());
       debugPrint('Payment completed successfully.');
