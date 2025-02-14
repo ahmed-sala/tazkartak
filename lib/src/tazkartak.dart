@@ -22,7 +22,7 @@ class TazkartakApp extends StatefulWidget {
 }
 
 class _TazkartakAppState extends State<TazkartakApp> {
-  String? _initialRoute = RoutesName.login;
+  String? _initialRoute = RoutesName.sectionScreen;
   bool _isInitialized = true;
 
   @override
