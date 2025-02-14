@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tazkartak_app/core/helpers/firestore/firestore_services.dart';
 import 'package:tazkartak_app/src/data/datasource/contract/auth_datasource.dart';
 import 'package:tazkartak_app/src/data/models/register_model.dart';
@@ -8,7 +9,8 @@ import 'package:tazkartak_app/src/data/models/register_model.dart';
 class AuthDatasourceImpl implements AuthDataSource {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirestoreService _firestoreService;
-  AuthDatasourceImpl(this._firestoreService);
+  SharedPreferences _sharedPreferences;
+  AuthDatasourceImpl(this._firestoreService, this._sharedPreferences);
   @override
   Future<void> login(String email, String password) async {
     await _firebaseAuth.signInWithEmailAndPassword(
@@ -57,5 +59,15 @@ class AuthDatasourceImpl implements AuthDataSource {
     var currentUser = _firebaseAuth.currentUser;
     await _firestoreService.updateDocument(
         'users', currentUser!.uid, registerModel.toJson());
+  }
+
+  @override
+  Future<void> saveUserId(String userId) async {
+    await _sharedPreferences.setString('userId', userId);
+  }
+
+  @override
+  Future<String> getUserId() async {
+    return _firebaseAuth.currentUser!.uid;
   }
 }

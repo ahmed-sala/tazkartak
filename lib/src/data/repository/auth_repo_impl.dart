@@ -16,6 +16,8 @@ class AuthRepoImpl implements AuthRepo {
       if (!await _authDataSource.checkVerificationStatus()) {
         throw Exception('Email not verified');
       }
+      var id = await _authDataSource.getUserId();
+      await _authDataSource.saveUserId(id);
     });
   }
 

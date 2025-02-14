@@ -10,7 +10,6 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:cloud_firestore/cloud_firestore.dart' as _i974;
 import 'package:dio/dio.dart' as _i361;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:pretty_dio_logger/pretty_dio_logger.dart' as _i528;
@@ -42,7 +41,7 @@ import '../../src/presentation/mangers/section/section_Screen_viewmodel.dart'
     as _i290;
 import '../helpers/firestore/firestore_module.dart' as _i929;
 import '../helpers/firestore/firestore_services.dart' as _i769;
-import '../helpers/shared_pref/shared_pref_module.dart' as _i976;
+import '../helpers/shared_pref/shared_pref_moduel.dart' as _i802;
 import '../service/location_manger/location_manger.dart' as _i861;
 import '../service/location_manger/location_manger_impl.dart' as _i877;
 import '../service/open_route_servie/open_route_service_api.dart' as _i938;
@@ -70,8 +69,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i290.SectionScreenViewmodel());
     gh.lazySingleton<_i974.FirebaseFirestore>(
         () => firebaseModule.firebaseFirestore);
-    gh.lazySingleton<_i558.FlutterSecureStorage>(
-        () => sharedPrefModule.secureStorage);
     gh.lazySingleton<_i361.Dio>(() => dioProvider.dioProvider());
     gh.lazySingleton<_i528.PrettyDioLogger>(() => dioProvider.providePretty());
     gh.factory<_i861.LocationManger>(() => _i877.LocationMangerImpl());
@@ -81,8 +78,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i107.OpenRouteServiceApiImpl());
     gh.factory<_i769.FirestoreService>(
         () => _i769.FirestoreService(gh<_i974.FirebaseFirestore>()));
-    gh.factory<_i49.AuthDataSource>(
-        () => _i1005.AuthDatasourceImpl(gh<_i769.FirestoreService>()));
+    gh.factory<_i49.AuthDataSource>(() => _i1005.AuthDatasourceImpl(
+          gh<_i769.FirestoreService>(),
+          gh<_i460.SharedPreferences>(),
+        ));
     gh.factory<_i146.AuthRepo>(
         () => _i644.AuthRepoImpl(gh<_i49.AuthDataSource>()));
     gh.factory<_i706.PaymentDatasource>(() => _i509.PaymentDatasourceImpl(
@@ -116,7 +115,7 @@ extension GetItInjectableX on _i174.GetIt {
   }
 }
 
-class _$SharedPrefModule extends _i976.SharedPrefModule {}
+class _$SharedPrefModule extends _i802.SharedPrefModule {}
 
 class _$FirebaseModule extends _i929.FirebaseModule {}
 

@@ -44,8 +44,6 @@ dependencies:
   json_annotation: ^4.9.0
   awesome_dialog: ^3.2.1
   google_fonts:
-  shared_preferences:
-  flutter_secure_storage:
   flutter_screenutil: ^5.9.3
   intl: ^0.18.0
   pull_down_button: ^0.10.2  # The following adds the Cupertino Icons font to your application.
@@ -63,10 +61,12 @@ dependencies:
   latlong2:
   webview_flutter: ^4.8.0
   http:
+  shared_preferences: ^2.3.4
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  flutter_stripe: ^11.4.0
+  flutter_stripe: ^11.0.0
 
 dev_dependencies:
   flutter_test:

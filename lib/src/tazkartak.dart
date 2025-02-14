@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tazkartak_app/core/dependency_injection/di.dart';
 import 'package:tazkartak_app/core/routes/routes_name.dart';
 import 'package:tazkartak_app/src/domain/usecase/payment_usecase.dart';
@@ -21,8 +22,8 @@ class TazkartakApp extends StatefulWidget {
 }
 
 class _TazkartakAppState extends State<TazkartakApp> {
-  String? _initialRoute = RoutesName.login;
-  bool _isInitialized = true;
+  late String? _initialRoute;
+  bool _isInitialized = false;
 
   @override
   void initState() {
@@ -33,13 +34,18 @@ class _TazkartakAppState extends State<TazkartakApp> {
 
   Future<void> initialization() async {
     // // Perform initialization logic
-
+    var userInfo = await getIt.get<SharedPreferences>().getString('userId');
+    if (userInfo != null) {
+      _initialRoute = RoutesName.sectionScreen;
+    } else {
+      _initialRoute = RoutesName.login;
+    }
     // Ensure the splash screen is removed after initialization
     FlutterNativeSplash.remove();
 
-    // setState(() {
-    //   _isInitialized = true;
-    // });
+    setState(() {
+      _isInitialized = true;
+    });
   }
 
   var paymentUseCase = getIt.get<PaymentUsecase>();
