@@ -1,37 +1,42 @@
 import 'package:flutter/material.dart';
 
 class CustomTextFormField extends StatefulWidget {
-  final String? labelText;
-  final String hintText;
-  final TextEditingController? controller;
-  final TextInputType? keyboardType;
-  final String? Function(String?)? validator;
-  final void Function(String)? onChanged;
-  final bool isPassword;
-
-  const CustomTextFormField({
+  CustomTextFormField({
     super.key,
-    this.labelText,
+    required this.labelText,
     required this.hintText,
-    this.controller,
-    this.keyboardType,
-    this.validator,
+    required this.keyboardType,
+    required this.controller,
+    required this.validator,
+    this.isPasswordVisible = true,
+    this.showPassword,
     this.onChanged,
-    this.isPassword = false, // Default is false (normal text field)
+    this.custfocusNode,
   });
+
+  final String? labelText;
+  final String? hintText;
+  final TextInputType? keyboardType;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  bool isPasswordVisible;
+  void Function()? showPassword;
+  void Function(String)? onChanged;
+  final FocusNode? custfocusNode;
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
 }
 
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
+  // Focus node to track the focus of the TextFormField
   final FocusNode _focusNode = FocusNode();
   bool _isFocused = false;
-  bool _isPasswordVisible = false; // Password visibility toggle
 
   @override
   void initState() {
     super.initState();
+    // Listen to focus changes
     _focusNode.addListener(() {
       setState(() {
         _isFocused = _focusNode.hasFocus;
@@ -47,61 +52,69 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   @override
   Widget build(BuildContext context) {
+    bool isSummaryField = widget.labelText == "Summary";
+
     return TextFormField(
+      focusNode: widget.custfocusNode ?? _focusNode,
       controller: widget.controller,
-      focusNode: _focusNode,
-      keyboardType: widget.keyboardType,
-      obscureText: widget.isPassword &&
-          !_isPasswordVisible, // Hide text if password field
-      onChanged: (value) {
-        setState(() {}); // Update state to show/hide clear button
-        if (widget.onChanged != null) {
-          widget.onChanged!(value);
-        }
-      },
-      validator: widget.validator,
       decoration: InputDecoration(
+        suffixIcon: (_isFocused && widget.showPassword != null)
+            ? IconButton(
+                onPressed: widget.showPassword,
+                icon: Icon(
+                  widget.isPasswordVisible
+                      ? Icons.visibility
+                      : Icons.visibility_off, // Toggle icon based on visibility
+                  color: Colors.grey.shade600,
+                ),
+              )
+            : null,
         labelText: widget.labelText,
         labelStyle: TextStyle(
-          color: Colors.black,
-          fontSize: 16,
+          color: _isFocused ? Colors.grey.shade600 : Colors.grey.shade400,
         ),
         hintText: widget.hintText,
         hintStyle: TextStyle(
           color: Colors.grey.shade400,
-          fontSize: 16,
         ),
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),
-          borderSide: BorderSide.none,
+        filled: true, // Add filled background
+        fillColor: const Color(0xFFF4F4F4),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: const BorderSide(
+            color: Color(0xFFDEDEDE), // Match background color
+          ),
         ),
-        suffixIcon: widget.isPassword
-            ? IconButton(
-                icon: Icon(
-                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                  color: Colors.grey,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _isPasswordVisible = !_isPasswordVisible;
-                  });
-                },
-              )
-            : (widget.controller?.text.isNotEmpty == true
-                ? IconButton(
-                    icon: Icon(Icons.close, color: Colors.grey),
-                    onPressed: () {
-                      widget.controller?.clear();
-                      setState(() {});
-                    },
-                  )
-                : null),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(
+            color: Colors.grey.shade400,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: const BorderSide(
+            color: Colors.red,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: const BorderSide(
+            color: Colors.red,
+          ),
+        ),
       ),
+      onChanged: widget.onChanged,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      obscureText:
+          widget.showPassword == null ? false : widget.isPasswordVisible,
+      validator: widget.validator,
+      keyboardType:
+          isSummaryField ? TextInputType.multiline : widget.keyboardType,
+      maxLines:
+          isSummaryField ? 5 : 1, // Set maxLines to 5 if it's the Summary field
       style: TextStyle(
-        color: Colors.black87,
-        fontSize: 16,
+        color: Color(0xFF858383),
       ),
     );
   }
