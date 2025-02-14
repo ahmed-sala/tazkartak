@@ -9,6 +9,7 @@ import 'package:tazkartak_app/src/tazkartak.dart';
 import 'core/dependency_injection/di.dart';
 import 'core/utils/bloc_observer/bloc_observer.dart';
 import 'firebase_options.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 void main() async {
   StripeService.init();
@@ -29,6 +30,7 @@ void main() async {
     host: 'firestore.googleapis.com',
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
+  Stripe.publishableKey = 'pk_test_51NyZm3H430uC8PK4ORZUe1YkhG51UWI04EzIxCd10nyJAnJPIJTMMZ7Bb7zaYpR2pB5xHD5KIiKALFP0hps8UQhI00s3kNvI7A';
 
   Bloc.observer = MyBlocObserver();
   runApp(const TazkartakApp());

@@ -1,4 +1,3 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefHelper {
@@ -59,23 +58,5 @@ class SharedPrefHelper {
   static getBoolean(String key) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getBool(key);
-  }
-
-  /// Save secure String [value] with [key]
-  static setSecureString(String key, String value) async {
-    const flutterSecureStorage = FlutterSecureStorage();
-    await flutterSecureStorage.write(key: key, value: value);
-  }
-
-  /// Return a secured String [value] with [key]
-  static Future<String?> getSecureString(String key) async {
-    const flutterSecureStorage = FlutterSecureStorage();
-    return await flutterSecureStorage.read(key: key);
-  }
-
-  /// Remove secure data with [key]
-  static removeSecureString(String key) async {
-    const flutterSecureStorage = FlutterSecureStorage();
-    await flutterSecureStorage.delete(key: key);
   }
 }

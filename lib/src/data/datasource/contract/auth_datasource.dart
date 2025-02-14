@@ -9,4 +9,6 @@ abstract interface class AuthDataSource {
   Future<RegisterModel> getUser();
   Future<void> logout();
   Future<void> updateProfile(RegisterModel registerModel);
+  Future<void> saveUserId(String userId);
+  Future<String> getUserId();
 }

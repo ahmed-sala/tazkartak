@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
           startMetroStation: startStation!,
           endMetroStation: endStation!,
         );
-        timeMetro = resultRouteMetro.metro.length * 4;
+        timeMetro = resultRouteMetro.metro.length * 2;
       });
     }
   }
@@ -159,12 +159,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 BlocListener<HomeCubit, HomeState>(
                   listener: (context, state) async {
                     if (state is PaymentSuccessState) {
+                      var updatedLength = resultRouteMetro.metro.length - 1;
                       // Navigate to the success screen on successful payment
                       TicketModel ticket = TicketModel(
                         fromStation: resultRouteMetro.metro.first.name,
                         toStation: resultRouteMetro.metro.last.name,
                         price: resultRouteMetro.price,
-                        noOfStations: resultRouteMetro.metro.length.toString(),
+                        noOfStations: updatedLength.toString(),
                       );
 
                       await homeView.storeTicket(ticket);
@@ -175,16 +176,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     } else if (state is SaveTiketSuccessState) {
                       hideLoading();
                       navKey.currentState!.push(MaterialPageRoute(
-                          builder: (context) => SuccessScreen(
-                                fromStation: resultRouteMetro.metro.first.name,
-                                toStation: resultRouteMetro.metro.last.name,
-                                price: resultRouteMetro.price,
-                                numberOfStations:
-                                    resultRouteMetro.metro.length.toString(),
-                                departureTime: timeMetro.toString(),
-                                arrivalTime: DateTime.now()
-                                    .add(Duration(minutes: timeMetro)),
-                              )));
+                        builder: (context) {
+                          var updatedLength = resultRouteMetro.metro.length - 1;
+
+                          return SuccessScreen(
+                            fromStation: resultRouteMetro.metro.first.name,
+                            toStation: resultRouteMetro.metro.last.name,
+                            price: resultRouteMetro.price,
+                            numberOfStations: updatedLength.toString(),
+                            departureTime: timeMetro.toString(),
+                            arrivalTime: DateTime.now()
+                                .add(Duration(minutes: timeMetro)),
+                          );
+                        },
+                      ));
                     } else if (state is SaveTiketFailuresState) {
                       hideLoading();
                       showAwesomeDialog(context,
