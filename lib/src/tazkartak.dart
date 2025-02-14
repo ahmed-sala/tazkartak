@@ -59,6 +59,7 @@ class _TazkartakAppState extends State<TazkartakApp> {
                 title: 'Tazkartak',
                 navigatorKey: navKey,
                 initialRoute: _initialRoute,
+
                 onGenerateRoute: AppRoute.onGenerateRoute,
               )),
     );
