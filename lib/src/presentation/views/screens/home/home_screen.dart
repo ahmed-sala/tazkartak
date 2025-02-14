@@ -3,8 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tazkartak_app/src/presentation/mangers/section/tazkarat_view_model/core/metro_seclection_model.dart';
 import 'package:tazkartak_app/src/presentation/views/screens/home/widget/metro_drop_down_widget.dart';
 import 'package:tazkartak_app/src/presentation/views/screens/home/widget/user_location_widget.dart';
-
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
