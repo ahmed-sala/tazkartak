@@ -199,7 +199,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: CustomAuthButton(
                     text: 'Go To Payment',
                     onPressed: () {
-                      homeView.openStripePaymentSheet();
+                      final String updatedPrice =
+                          (int.parse(resultRouteMetro.price) * 10000)
+                              .toString();
+                      homeView.openStripePaymentSheet(updatedPrice);
                     },
                     color: Colors.deepPurpleAccent,
                     textColor: Colors.white,
