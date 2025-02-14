@@ -50,7 +50,9 @@ class UserLocationWidget extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      NevigateToLocation(context);
+
+                      viewModel.userLatitude!=0 ?
+                      NevigateToLocation(context) : null;
                     },
                     child: const Icon(
                         Icons.location_on, color: Colors.red, size: 28),
