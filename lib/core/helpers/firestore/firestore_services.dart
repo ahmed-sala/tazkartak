@@ -19,6 +19,17 @@ class FirestoreService {
     }
   }
 
+  Future<DocumentReference> addNormalDocument(
+      String collectionPath, Map<String, dynamic> data) async {
+    try {
+      print('Attempting to add document to $collectionPath');
+      return await _firestore.collection(collectionPath).add(data);
+    } catch (e) {
+      print('Error adding document: $e');
+      throw Exception('Error adding document: $e');
+    }
+  }
+
   Future<List<Map<String, dynamic>>> getDocuments(String collectionPath) async {
     try {
       final querySnapshot = await _firestore.collection(collectionPath).get();

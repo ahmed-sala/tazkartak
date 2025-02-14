@@ -81,12 +81,14 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i107.OpenRouteServiceApiImpl());
     gh.factory<_i769.FirestoreService>(
         () => _i769.FirestoreService(gh<_i974.FirebaseFirestore>()));
-    gh.factory<_i706.PaymentDatasource>(
-        () => _i509.PaymentDatasourceImpl(gh<_i318.StripeDioService>()));
     gh.factory<_i49.AuthDataSource>(
         () => _i1005.AuthDatasourceImpl(gh<_i769.FirestoreService>()));
     gh.factory<_i146.AuthRepo>(
         () => _i644.AuthRepoImpl(gh<_i49.AuthDataSource>()));
+    gh.factory<_i706.PaymentDatasource>(() => _i509.PaymentDatasourceImpl(
+          gh<_i318.StripeDioService>(),
+          gh<_i769.FirestoreService>(),
+        ));
     gh.factory<_i305.PaymentRepo>(
         () => _i132.PaymentRepoImpl(gh<_i706.PaymentDatasource>()));
     gh.factory<_i601.LoginUsecase>(

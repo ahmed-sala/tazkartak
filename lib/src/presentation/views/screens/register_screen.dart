@@ -31,167 +31,246 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color(0xFF0A2C66),
         width: double.infinity,
+        // Use a gradient background for a modern metro look
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.deepPurple.shade700,
+              Colors.deepPurple.shade300,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 31),
         child: BlocProvider(
           create: (context) => registerViewmodel,
           child: SingleChildScrollView(
             child: SafeArea(
               child: BlocConsumer<RegisterViewmodel, RegisterState>(
-                  listener: (context, state) {
-                switch (state) {
-                  case RegisterSuccessState():
-                    hideLoading();
-                    showAwesomeDialog(context,
+                listener: (context, state) {
+                  // Handle state changes using a switch-case style
+                  switch (state) {
+                    case RegisterSuccessState():
+                      hideLoading();
+                      showAwesomeDialog(
+                        context,
                         title: 'Success',
                         desc:
-                            'Registration successful check your email to verify your account',
+                            'Registration successful. Check your email to verify your account',
                         onOk: () {
-                      navKey.currentState!.pushNamedAndRemoveUntil(
-                          RoutesName.login, (route) => false);
-                    }, dialogType: DialogType.success);
-                  case RegisterErrorState():
-                    hideLoading();
-                    showAwesomeDialog(context,
+                          navKey.currentState!.pushNamedAndRemoveUntil(
+                              RoutesName.login, (route) => false);
+                        },
+                        dialogType: DialogType.success,
+                      );
+                      break;
+                    case RegisterErrorState():
+                      hideLoading();
+                      showAwesomeDialog(
+                        context,
                         title: 'Error',
                         desc: state.errorMessage,
                         onOk: () {},
-                        dialogType: DialogType.error);
-                  case RegisterLoadingState():
-                    showLoading(context, 'Registering...');
-                  default:
-                }
-              }, builder: (context, state) {
-                return Form(
-                  key: registerViewmodel.formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      verticalSpace(48),
-                      Center(
-                          child: Image.asset('assets/images/logo.png',
-                              width: 144, height: 144)),
-                      Center(
-                        child: const Text('Tazkartak',
+                        dialogType: DialogType.error,
+                      );
+                      break;
+                    case RegisterLoadingState():
+                      showLoading(context, 'Registering...');
+                      break;
+                    default:
+                  }
+                },
+                builder: (context, state) {
+                  return Form(
+                    key: registerViewmodel.formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        verticalSpace(48),
+                        // Logo and App Title
+                        Center(
+                          child: Container(
+                            width: 144,
+                            height: 144,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Image.asset(
+                                'assets/images/logo.png',
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        ),
+                        verticalSpace(16),
+                        Center(
+                          child: Text(
+                            'Tazkartak',
                             style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        verticalSpace(24),
+                        // Form Fields Card
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          elevation: 8,
+                          child: Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Name Field
+                                Text(
+                                  'Name',
+                                  style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontSize: 12),
+                                ),
+                                verticalSpace(8),
+                                CustomTextFormField(
+                                  hintText: 'Enter your name',
+                                  keyboardType: TextInputType.name,
+                                  controller: registerViewmodel.nameController,
+                                  validator: (val) =>
+                                      Validations.validateName(val),
+                                  labelText: 'Full Name',
+                                ),
+                                verticalSpace(14),
+                                // Email Field
+                                Text(
+                                  'Email',
+                                  style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontSize: 12),
+                                ),
+                                verticalSpace(8),
+                                CustomTextFormField(
+                                  hintText: 'Enter your email',
+                                  keyboardType: TextInputType.emailAddress,
+                                  controller: registerViewmodel.emailController,
+                                  validator: (val) =>
+                                      Validations.validateEmail(val),
+                                  labelText: 'Email Address',
+                                ),
+                                verticalSpace(16),
+                                // Password Field
+                                Text(
+                                  'Password',
+                                  style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontSize: 12),
+                                ),
+                                verticalSpace(8),
+                                CustomTextFormField(
+                                  isPasswordVisible: passwordVisible,
+                                  showPassword: () {
+                                    setState(() {
+                                      passwordVisible = !passwordVisible;
+                                    });
+                                  },
+                                  hintText: 'Enter your Password',
+                                  keyboardType: TextInputType.visiblePassword,
+                                  controller:
+                                      registerViewmodel.passwordController,
+                                  validator: (val) =>
+                                      Validations.validatePassword(val),
+                                  labelText: 'Password',
+                                ),
+                                verticalSpace(16),
+                                // Confirm Password Field
+                                Text(
+                                  'Confirm Password',
+                                  style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontSize: 12),
+                                ),
+                                verticalSpace(8),
+                                CustomTextFormField(
+                                  isPasswordVisible: confirmPasswordVisible,
+                                  showPassword: () {
+                                    setState(() {
+                                      confirmPasswordVisible =
+                                          !confirmPasswordVisible;
+                                    });
+                                  },
+                                  hintText: 'Confirm your Password',
+                                  keyboardType: TextInputType.visiblePassword,
+                                  controller: registerViewmodel
+                                      .confirmPasswordController,
+                                  validator: (val) =>
+                                      Validations.validateConfirmPassword(
+                                          val,
+                                          registerViewmodel
+                                              .passwordController.text),
+                                  labelText: 'Confirm Password',
+                                ),
+                                verticalSpace(16),
+                                // Date Input Field
+                                DateInputField(
+                                  selectedDate: registerViewmodel.selectedDate,
+                                  onDateSelected:
+                                      registerViewmodel.updateSelectedDate,
+                                ),
+                                verticalSpace(16),
+                                // Gender Selection
+                                GenderRadioButtonRow(),
+                                verticalSpace(16),
+                                // Create Account Button
+                                Center(
+                                  child: CustomAuthButton(
+                                    text: 'Create Account',
+                                    onPressed: () {
+                                      registerViewmodel.register();
+                                    },
+                                    color: Colors.deepPurple,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        verticalSpace(24),
+                        // Divider with "OR"
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Divider(
                                 color: Colors.white,
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold)),
-                      ),
-                      verticalSpace(14),
-                      Text('Name',
-                          style: TextStyle(color: Colors.white, fontSize: 12)),
-                      verticalSpace(8),
-                      CustomTextFormField(
-                        hintText: 'Enter your name',
-                        keyboardType: TextInputType.name,
-                        controller: registerViewmodel.nameController,
-                        validator: (val) {
-                          return Validations.validateName(val);
-                        },
-                        labelText: 'Full Name',
-                      ),
-                      verticalSpace(14),
-                      const Text('Email',
-                          style: TextStyle(color: Colors.white, fontSize: 12)),
-                      verticalSpace(8),
-                      CustomTextFormField(
-                        hintText: 'Enter your email',
-                        keyboardType: TextInputType.emailAddress,
-                        controller: registerViewmodel.emailController,
-                        validator: (val) {
-                          return Validations.validateEmail(val);
-                        },
-                        labelText: 'Email Address',
-                      ),
-                      verticalSpace(16),
-                      Text('Password',
-                          style: TextStyle(color: Colors.white, fontSize: 12)),
-                      verticalSpace(8),
-                      CustomTextFormField(
-                        isPasswordVisible: passwordVisible,
-                        showPassword: () {
-                          setState(() {
-                            passwordVisible = !passwordVisible;
-                          });
-                        },
-                        hintText: 'Enter your Password',
-                        keyboardType: TextInputType.visiblePassword,
-                        controller: registerViewmodel.passwordController,
-                        validator: (val) {
-                          return Validations.validatePassword(val);
-                        },
-                        labelText: 'Password',
-                      ),
-                      verticalSpace(16),
-                      Text('Confirm Password',
-                          style: TextStyle(color: Colors.white, fontSize: 12)),
-                      verticalSpace(8),
-                      CustomTextFormField(
-                        isPasswordVisible: confirmPasswordVisible,
-                        showPassword: () {
-                          setState(() {
-                            confirmPasswordVisible = !confirmPasswordVisible;
-                          });
-                        },
-                        hintText: 'Confirm your Password',
-                        keyboardType: TextInputType.visiblePassword,
-                        controller: registerViewmodel.confirmPasswordController,
-                        validator: (val) {
-                          return Validations.validateConfirmPassword(
-                              val, registerViewmodel.passwordController.text);
-                        },
-                        labelText: 'Confirm Password',
-                      ),
-                      verticalSpace(16),
-                      DateInputField(
-                          selectedDate: registerViewmodel.selectedDate,
-                          onDateSelected: registerViewmodel.updateSelectedDate),
-                      verticalSpace(16),
-                      GenderRadioButtonRow(),
-                      verticalSpace(16),
-                      Center(
-                        child: CustomAuthButton(
-                            text: 'Create Account',
-                            onPressed: () {
-                              registerViewmodel.register();
-                            },
-                            color: Color(0x7F2785E5)),
-                      ),
-                      verticalSpace(52),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Divider(
-                              color: Colors.white,
-                              thickness: 1.2, // Adjust thickness if needed
-                              endIndent: 10, // Space between line and text
+                                thickness: 1.2,
+                                endIndent: 10,
+                              ),
                             ),
-                          ),
-                          Text(
-                            'OR',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              // Slightly larger for better visibility
-                              fontWeight: FontWeight
-                                  .w400, // Match bold text in the image
+                            Text(
+                              'OR',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Divider(
-                              color: Colors.white,
-                              thickness: 1.2,
-                              indent: 10, // Space between line and text
+                            Expanded(
+                              child: Divider(
+                                color: Colors.white,
+                                thickness: 1.2,
+                                indent: 10,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      verticalSpace(26),
-                      const Center(
-                        child: SizedBox(
-                          width: 283,
+                          ],
+                        ),
+                        verticalSpace(26),
+                        // Already have an account? Log in.
+                        Center(
                           child: SizedBox(
                             width: 283,
                             child: Text(
@@ -206,18 +285,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                         ),
-                      ),
-                      verticalSpace(28),
-                      CustomAuthButton(
-                          text: 'Log In',
-                          onPressed: () {},
-                          color: Colors.white,
-                          textColor: Colors.black),
-                      verticalSpace(60),
-                    ],
-                  ),
-                );
-              }),
+                        verticalSpace(28),
+                        Center(
+                          child: CustomAuthButton(
+                            text: 'Log In',
+                            onPressed: () {
+                              navKey.currentState!.pushNamedAndRemoveUntil(
+                                  RoutesName.login, (route) => false);
+                            },
+                            color: Colors.white,
+                            textColor: Colors.black,
+                          ),
+                        ),
+                        verticalSpace(60),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),

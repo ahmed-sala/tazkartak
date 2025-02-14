@@ -11,4 +11,8 @@ class ProfileUsecase {
   Future<ApiResult<RegisterModel>> getUser() async {
     return await _authRepo.getUser();
   }
+
+  Future<ApiResult<void>> logout() async {
+    return await _authRepo.logout();
+  }
 }

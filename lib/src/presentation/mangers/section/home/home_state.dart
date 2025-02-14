@@ -23,3 +23,12 @@ class GetRoutesFailuresState extends HomeState {
 class CancelPaymentState extends HomeState {}
 
 class PaymentSuccessState extends HomeState {}
+
+class SaveTiketLoadingState extends HomeState {}
+
+class SaveTiketSuccessState extends HomeState {}
+
+class SaveTiketFailuresState extends HomeState {
+  final String errorMassage;
+  SaveTiketFailuresState({required this.errorMassage});
+}

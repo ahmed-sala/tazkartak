@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tazkartak_app/core/dependency_injection/di.dart';
 import 'package:tazkartak_app/src/presentation/mangers/auth/profile/profile_state.dart';
 import 'package:tazkartak_app/src/presentation/mangers/auth/profile/profile_viewmodel.dart';
+import 'package:tazkartak_app/src/tazkartak.dart';
+
+import '../../../../core/routes/routes_name.dart';
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({Key? key}) : super(key: key);
@@ -13,9 +16,9 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   ProfileViewmodel profileViewmodel = getIt<ProfileViewmodel>();
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     profileViewmodel.getUser();
   }
@@ -23,50 +26,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Profile',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 30,
-          ),
-        ),
-        backgroundColor: const Color(0xFF0A2C66),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.edit,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const EditProfileScreen()),
-              );
-            },
-          ),
-        ],
-      ),
+      // Remove the default AppBar for a custom gradient header
       body: BlocProvider(
         create: (context) => profileViewmodel,
-        child: SingleChildScrollView(
-          child: BlocBuilder<ProfileViewmodel, ProfileState>(
-            builder: (context, state) {
-              if (state is ProfileLoadingState) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (state is ProfileErrorState) {
-                return Center(child: Text(state.errorMessage));
-              }
-              return Column(
+        child: BlocBuilder<ProfileViewmodel, ProfileState>(
+          builder: (context, state) {
+            if (state is ProfileLoadingState) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state is ProfileErrorState) {
+              return Center(child: Text(state.errorMessage));
+            }
+            return SingleChildScrollView(
+              child: Column(
                 children: [
+                  // Custom Gradient Header
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 40.0),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF0A2C66),
-                      borderRadius: BorderRadius.only(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.deepPurple.shade700,
+                          Colors.deepPurple.shade300,
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                      borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(30),
                         bottomRight: Radius.circular(30),
                       ),
@@ -75,7 +62,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         CircleAvatar(
                           radius: 50,
-                          backgroundImage: AssetImage(''),
+                          backgroundImage: const AssetImage(
+                              'assets/images/profile_placeholder.png'),
                         ),
                         const SizedBox(height: 10),
                         Text(
@@ -98,77 +86,97 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // List of profile options.
-                  _ProfileOption(
-                    icon: Icons.edit,
-                    title: 'Edit Profile',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const EditProfileScreen()),
-                      );
-                    },
+                  // Profile Options Card
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        children: [
+                          _ProfileOption(
+                            icon: Icons.edit,
+                            title: 'Edit Profile',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const EditProfileScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                          const Divider(height: 1),
+                          _ProfileOption(
+                            icon: Icons.language,
+                            title: 'Language',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const LanguageSelectionScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                          const Divider(height: 1),
+                          _ProfileOption(
+                            icon: Icons.info,
+                            title: 'About Us',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const AboutUsScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                          const Divider(height: 1),
+                          _ProfileOption(
+                            icon: Icons.logout,
+                            title: 'Logout',
+                            onTap: () {
+                              // Show a confirmation dialog before logging out.
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('Confirm Logout'),
+                                  content: const Text(
+                                      'Are you sure you want to logout?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        profileViewmodel.logout();
+                                        navKey.currentState!
+                                            .pushNamedAndRemoveUntil(
+                                          RoutesName.login,
+                                          (route) => false,
+                                        );
+                                      },
+                                      child: const Text('Logout'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  const Divider(height: 1),
-                  _ProfileOption(
-                    icon: Icons.language,
-                    title: 'Language',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const LanguageSelectionScreen()),
-                      );
-                    },
-                  ),
-                  const Divider(height: 1),
-                  _ProfileOption(
-                    icon: Icons.info,
-                    title: 'About Us',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const AboutUsScreen()),
-                      );
-                    },
-                  ),
-                  const Divider(height: 1),
-                  _ProfileOption(
-                    icon: Icons.logout,
-                    title: 'Logout',
-                    onTap: () {
-                      // Show a confirmation dialog before logging out.
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Confirm Logout'),
-                          content:
-                              const Text('Are you sure you want to logout?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                // TODO: Implement your logout logic here.
-                              },
-                              child: const Text('Logout'),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                  const Divider(height: 1),
                 ],
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -193,10 +201,20 @@ class _ProfileOption extends StatelessWidget {
     return ListTile(
       leading: Icon(
         icon,
-        color: Color(0xFF0A2C66),
+        color: Colors.deepPurple,
       ),
-      title: Text(title, style: const TextStyle(fontSize: 16)),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      trailing: const Icon(
+        Icons.arrow_forward_ios,
+        size: 16,
+        color: Colors.grey,
+      ),
       onTap: onTap,
     );
   }
@@ -212,7 +230,7 @@ class EditProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Profile'),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.deepPurple,
       ),
       body: const Center(child: Text('Edit Profile Screen')),
     );
@@ -229,7 +247,7 @@ class LanguageSelectionScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Select Language'),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.deepPurple,
       ),
       body: const Center(child: Text('Language Selection Screen')),
     );
@@ -246,7 +264,7 @@ class AboutUsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('About Us'),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.deepPurple,
       ),
       body: const Center(child: Text('About Us Screen')),
     );

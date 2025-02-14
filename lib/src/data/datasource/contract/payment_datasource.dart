@@ -1,3 +1,5 @@
+import '../../models/ticket_model.dart';
+
 abstract interface class PaymentDatasource {
   /// Calls the Stripe API to create a payment intent.
   Future<Map<String, dynamic>> createPaymentIntent(
@@ -8,4 +10,6 @@ abstract interface class PaymentDatasource {
 
   /// Presents the payment sheet to the user.
   Future<void> presentPaymentSheet();
+  Future<String> storeTicket(TicketModel ticket, String userId);
+  Future<String> getUserId();
 }

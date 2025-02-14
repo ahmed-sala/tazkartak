@@ -29,4 +29,21 @@ class ProfileViewmodel extends Cubit<ProfileState> {
       emit(ProfileErrorState(e.toString()));
     }
   }
+
+  Future<void> logout() async {
+    try {
+      emit(LogOutLoadingState());
+      var result = await _profileUsecase.logout();
+      switch (result) {
+        case Success<void>():
+          emit(LogOutSuccessState());
+        case Failures<void>():
+          var errorMessage =
+              ErrorHandler.fromException(result.exception).errorMessage;
+          emit(LogOutErrorState(errorMessage));
+      }
+    } catch (e) {
+      emit(LogOutErrorState(e.toString()));
+    }
+  }
 }

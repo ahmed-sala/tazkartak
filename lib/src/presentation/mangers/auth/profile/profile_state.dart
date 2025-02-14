@@ -11,3 +11,13 @@ class ProfileErrorState extends ProfileState {
 
   ProfileErrorState(this.errorMessage);
 }
+
+class LogOutLoadingState extends ProfileState {}
+
+class LogOutSuccessState extends ProfileState {}
+
+class LogOutErrorState extends ProfileState {
+  final String errorMessage;
+
+  LogOutErrorState(this.errorMessage);
+}

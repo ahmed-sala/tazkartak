@@ -6,12 +6,14 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:injectable/injectable.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
+import 'package:tazkartak_app/src/data/models/ticket_model.dart';
 import 'package:tazkartak_app/src/domain/usecase/payment_usecase.dart';
 import 'package:tazkartak_app/src/presentation/mangers/section/home/home_action.dart';
 import 'package:tazkartak_app/src/presentation/mangers/section/home/home_state.dart';
 import 'package:tazkartak_app/src/presentation/mangers/section/tazkarat_view_model/core/metro_seclection_model.dart';
 
 import '../../../../../core/common/api/api_result.dart';
+import '../../../../../core/error_handeler/error_handler.dart';
 import '../../../../../core/service/location_manger/location_manger.dart';
 import '../../../../../core/service/open_route_servie/open_route_service_api.dart';
 
@@ -29,6 +31,7 @@ class HomeCubit extends Cubit<HomeState> {
   double userLongitude = 0;
   double userLatitude = 0;
   List<LatLng> routesPoint = [];
+  String ticketId = "";
 
   Future<void> doAction({required HomeAction homeAction}) async {
     switch (homeAction) {
@@ -157,6 +160,26 @@ class HomeCubit extends Cubit<HomeState> {
         // Handle other errors appropriately
         debugPrint('Stripe error: ${e.error.localizedMessage}');
       }
+    }
+  }
+
+  Future<void> storeTicket(TicketModel ticket) async {
+    try {
+      emit(SaveTiketLoadingState());
+      print('ticket: ${ticket.toJson()}');
+      var result = await paymentUsecase.executeStoreTicket(ticket);
+      switch (result) {
+        case Success<String>():
+          ticketId = result.data!;
+          emit(SaveTiketSuccessState());
+
+        case Failures<String>():
+          var errorMessage =
+              ErrorHandler.fromException(result.exception).errorMessage;
+          emit(SaveTiketFailuresState(errorMassage: errorMessage));
+      }
+    } catch (e) {
+      emit(SaveTiketFailuresState(errorMassage: e.toString()));
     }
   }
 }
