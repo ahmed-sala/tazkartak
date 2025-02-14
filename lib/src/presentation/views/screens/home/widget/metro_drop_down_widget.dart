@@ -3,7 +3,7 @@ import 'package:tazkartak_app/src/presentation/mangers/section/tazkarat_view_mod
 
 class MetroDropdown extends StatefulWidget {
   final List<MetroStationModel> metroStations;
-  final Function(String?)? onChanged;
+  final Function(MetroStationModel?)? onChanged;
 
   const MetroDropdown({super.key, required this.metroStations, this.onChanged});
 
@@ -12,7 +12,7 @@ class MetroDropdown extends StatefulWidget {
 }
 
 class _MetroDropdownState extends State<MetroDropdown> {
-  String? selectedStation;
+  MetroStationModel? selectedStation;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class _MetroDropdownState extends State<MetroDropdown> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade300),
       ),
-      child: DropdownButtonFormField<String>(
+      child: DropdownButtonFormField<MetroStationModel>(
         value: selectedStation,
         hint: const Text("Select a Metro Station"),
         decoration: const InputDecoration(
@@ -32,7 +32,7 @@ class _MetroDropdownState extends State<MetroDropdown> {
         ),
         items: widget.metroStations.map((e) {
           return DropdownMenuItem(
-            value: e.name,
+            value: e,
             child: Row(
               children: [
                 const Icon(Icons.train, color: Colors.blueAccent, size: 20),
