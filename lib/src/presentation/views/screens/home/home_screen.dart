@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tazkartak_app/core/dependency_injection/di.dart';
+import 'package:tazkartak_app/src/presentation/mangers/section/home/home_cubit.dart';
 import 'package:tazkartak_app/src/presentation/mangers/section/home/home_cubit.dart';
 import 'package:tazkartak_app/src/presentation/mangers/section/tazkarat_view_model/core/metro_seclection_model.dart';
+import 'package:tazkartak_app/src/presentation/shared_widgets/custom_auth_button.dart';
 import 'package:tazkartak_app/src/presentation/views/screens/home/widget/metro_drop_down_widget.dart';
 import 'package:tazkartak_app/src/presentation/views/screens/home/widget/user_location_widget.dart';
+import 'package:tazkartak_app/src/presentation/views/screens/success/success_screen.dart';
+import 'package:tazkartak_app/src/tazkartak.dart';
 
+import '../../../mangers/section/home/home_state.dart';
+
+// In your HomeScreen widget
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -31,6 +39,31 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
   }
+  List<MetroStationModel> findStationsBetween(
+      List<MetroStationModel> stations,
+      String startStationName,
+      String endStationName) {
+
+    int startIndex = stations.indexWhere((station) => station.name == startStationName);
+    int endIndex = stations.indexWhere((station) => station.name == endStationName);
+    if (startIndex == -1 || endIndex == -1) {
+      return [];
+    }
+
+    if (startIndex > endIndex) {
+      int temp = startIndex;
+      startIndex = endIndex;
+      endIndex = temp;
+    }
+    List<MetroStationModel> stationsBetween = stations.sublist(startIndex, endIndex + 1);
+    for (var station in stationsBetween) {
+      if (station.exchangeWithFonts.isNotEmpty) {
+        print("محطة ${station.name} تتطلب تحويل إلى ${station.exchangeWithFonts}");
+      }
+    }
+
+    return stationsBetween;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +79,13 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
+        backgroundColor: Colors.blueAccent,
+        elevation: 3,
+        shadowColor: Colors.grey.withOpacity(0.5),
+        leading: IconButton(
+          icon: const Icon(Icons.menu, color: Colors.white),
+          onPressed: () {},
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(

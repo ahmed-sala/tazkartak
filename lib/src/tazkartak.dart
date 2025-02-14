@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tazkartak_app/core/routes/routes_name.dart';
-import 'package:tazkartak_app/core/service/location_manger/location_manger_impl.dart';
-import 'package:tazkartak_app/core/service/open_route_servie/open_route_service_api.dart';
-import 'package:tazkartak_app/core/service/open_route_servie/open_route_service_api_impl.dart';
-import 'package:tazkartak_app/src/presentation/mangers/section/home/home_cubit.dart';
 
 import '../core/routes/app_route.dart';
 
@@ -20,7 +15,7 @@ class TazkartakApp extends StatefulWidget {
 }
 
 class _TazkartakAppState extends State<TazkartakApp> {
-  String? _initialRoute = RoutesName.sectionScreen;
+  String? _initialRoute = RoutesName.login;
   bool _isInitialized = true;
 
   @override
