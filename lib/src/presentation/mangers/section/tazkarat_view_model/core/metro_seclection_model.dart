@@ -128,7 +128,7 @@ ResultRouteMetro findStationsBetween({
     int startIndex = startLineStations.indexWhere((s) => s.name == startMetroStation.name);
     int endIndex = startLineStations.indexWhere((s) => s.name == endMetroStation.name);
     if (startIndex == -1 || endIndex == -1) {
-      return ResultRouteMetro(metro: [],
+      return const ResultRouteMetro(metro: [],
           price: "",
           message: "المحطات غير موجودة في الخط المحدد.");
     }
@@ -193,7 +193,6 @@ class ResultRouteMetro {
 
 
 int  priceMetro({required int length}){
-   print("price :$length");
   if(length <= 9  ){
    return 8;
   }else if(length <= 16){
