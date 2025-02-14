@@ -39,31 +39,31 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
   }
-  List<MetroStationModel> findStationsBetween(
-      List<MetroStationModel> stations,
-      String startStationName,
-      String endStationName) {
-
-    int startIndex = stations.indexWhere((station) => station.name == startStationName);
-    int endIndex = stations.indexWhere((station) => station.name == endStationName);
-    if (startIndex == -1 || endIndex == -1) {
-      return [];
-    }
-
-    if (startIndex > endIndex) {
-      int temp = startIndex;
-      startIndex = endIndex;
-      endIndex = temp;
-    }
-    List<MetroStationModel> stationsBetween = stations.sublist(startIndex, endIndex + 1);
-    for (var station in stationsBetween) {
-      if (station.exchangeWithFonts.isNotEmpty) {
-        print("محطة ${station.name} تتطلب تحويل إلى ${station.exchangeWithFonts}");
-      }
-    }
-
-    return stationsBetween;
-  }
+  // List<MetroStationModel> findStationsBetween(
+  //     List<MetroStationModel> stations,
+  //     String startStationName,
+  //     String endStationName) {
+  //
+  //   int startIndex = stations.indexWhere((station) => station.name == startStationName);
+  //   int endIndex = stations.indexWhere((station) => station.name == endStationName);
+  //   if (startIndex == -1 || endIndex == -1) {
+  //     return [];
+  //   }
+  //
+  //   if (startIndex > endIndex) {
+  //     int temp = startIndex;
+  //     startIndex = endIndex;
+  //     endIndex = temp;
+  //   }
+  //   List<MetroStationModel> stationsBetween = stations.sublist(startIndex, endIndex + 1);
+  //   for (var station in stationsBetween) {
+  //     if (station.exchangeWithFonts.isNotEmpty) {
+  //       print("محطة ${station.name} تتطلب تحويل إلى ${station.exchangeWithFonts}");
+  //     }
+  //   }
+  //
+  //   return stationsBetween;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        backgroundColor: Colors.blueAccent,
-        elevation: 3,
         shadowColor: Colors.grey.withOpacity(0.5),
         leading: IconButton(
           icon: const Icon(Icons.menu, color: Colors.white),
