@@ -28,17 +28,23 @@ List<MetroStationModel> metroStationsOne = [
   MetroStationModel(
       name: "المعصرة", latitude: 29.9574, longitude: 31.3176, line: 1),
   MetroStationModel(
-      name: "طرة الأسمنت", latitude: 29.9721, longitude: 31.3055, line: 1),
+      name: "طرة الأسمنت", latitude: 29.947676, longitude: 31.280389, line: 1),
   MetroStationModel(
-      name: "كوتسيكا", latitude: 29.9828, longitude: 31.2969, line: 1),
+      name: "كوتسيكا", latitude: 29.936259, longitude: 31.2818206, line: 1),
   MetroStationModel(
-      name: "طرة البلد", latitude: 29.9904, longitude: 31.2892, line: 1),
+      name: "طرة البلد", latitude: 29.9467633, longitude: 31.27298, line: 1),
   MetroStationModel(
-      name: "ثكنات المعادي", latitude: 30.0045, longitude: 31.2788, line: 1),
+      name: "ثكنات المعادي",
+      latitude: 29.9855031,
+      longitude: 31.350161,
+      line: 1),
   MetroStationModel(
-      name: "المعادي", latitude: 30.0131, longitude: 31.2721, line: 1),
+      name: "المعادي", latitude: 29.9623654, longitude: 31.2677637, line: 1),
   MetroStationModel(
-      name: "حدائق المعادي", latitude: 30.0204, longitude: 31.2670, line: 1),
+      name: "حدائق المعادي",
+      latitude: 29.9702409,
+      longitude: 31.2505126,
+      line: 1),
   MetroStationModel(
       name: "دار السلام", latitude: 30.0315, longitude: 31.2568, line: 1),
   MetroStationModel(
@@ -46,7 +52,10 @@ List<MetroStationModel> metroStationsOne = [
   MetroStationModel(
       name: "مار جرجس", latitude: 30.0471, longitude: 31.2445, line: 1),
   MetroStationModel(
-      name: "الملك الصالح", latitude: 30.0519, longitude: 31.2359, line: 1),
+      name: "الملك الصالح",
+      latitude: 30.0187648,
+      longitude: 31.3196544,
+      line: 1),
   MetroStationModel(
       name: "السيدة زينب", latitude: 30.0535, longitude: 31.2314, line: 1),
   MetroStationModel(
@@ -92,7 +101,7 @@ List<MetroStationModel> metroStationsOne = [
   MetroStationModel(
       name: "عين شمس", latitude: 30.1176, longitude: 31.3081, line: 1),
   MetroStationModel(
-      name: "عزبة النخل", latitude: 30.1245, longitude: 31.3148, line: 1),
+      name: "عزبة النخل", latitude: 30.139318, longitude: 31.3244222, line: 1),
   MetroStationModel(
       name: "المرج", latitude: 30.1335, longitude: 31.3221, line: 1),
   MetroStationModel(
@@ -182,7 +191,7 @@ List<MetroStationModel> metroStationsThree = [
   MetroStationModel(
       name: "كلية البنات", latitude: 30.1665, longitude: 31.3070, line: 3),
   MetroStationModel(
-      name: "الاستاد", latitude: 30.1705, longitude: 31.3000, line: 3),
+      name: "الاستاد", latitude: 30.0136589, longitude: 31.3099943, line: 3),
   MetroStationModel(
       name: "أرض المعارض", latitude: 30.1750, longitude: 31.2930, line: 3),
   MetroStationModel(
