@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -27,6 +29,61 @@ class SuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var homeCubit = context.read<HomeCubit>();
+    var ticketsIds = [
+      "123456",
+      "234567",
+      "345678",
+      "456789",
+      "567890",
+      "678901",
+      "789012",
+      "890123",
+      "901234",
+      "012345",
+      "111222",
+      "222333",
+      "333444",
+      "444555",
+      "555666",
+      "666777",
+      "777888",
+      "888999",
+      "999000",
+      "000111",
+      "135790",
+      "246802",
+      "987654",
+      "876543",
+      "765432",
+      "654321",
+      "543210",
+      "102938",
+      "564738",
+      "019283",
+      "102938",
+      "564738",
+      "019283",
+      "847362",
+      "726451",
+      "615243",
+      "504132",
+      "908172",
+      "817263",
+      "726354",
+      "635241",
+      "524130",
+      "413029",
+      "302918",
+      "291807",
+      "180796",
+      "069685",
+      "958574",
+      "847463",
+      "736352"
+    ];
+    var random = new Random();
+    var ticketId = ticketsIds[random.nextInt(ticketsIds.length)];
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -139,7 +196,7 @@ class SuccessScreen extends StatelessWidget {
                             Expanded(
                               flex: 3,
                               child: QrImageView(
-                                data: homeCubit.ticketId,
+                                data: ticketId,
                                 version: QrVersions.auto,
                                 size: 100,
                                 gapless: false,
@@ -156,7 +213,7 @@ class SuccessScreen extends StatelessWidget {
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   Text(
-                                    homeCubit.ticketId,
+                                    ticketId,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
