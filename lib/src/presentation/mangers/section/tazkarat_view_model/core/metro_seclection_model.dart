@@ -256,10 +256,7 @@ class ResultRouteMetro {
   });
 }
 
-/// Returns the fare based on the number of **stations** in the route.
-/// Internally, we subtract 1 to get the "number of hops".
 int priceMetro({required int length}) {
-  // "length" = total stations, so "updatedLength" = total hops
   var updatedLength = length - 1;
 
   if (updatedLength <= 9) {
@@ -271,7 +268,6 @@ int priceMetro({required int length}) {
   } else if (updatedLength <= 39) {
     return 20;
   } else {
-    // You can handle > 39 however you prefer
     return 20;
   }
 }
@@ -280,7 +276,6 @@ ResultRouteMetro findStationsBetween({
   required MetroStationModel startMetroStation,
   required MetroStationModel endMetroStation,
 }) {
-  /// Helper to get stations by line
   List<MetroStationModel> getLineStations(int line) {
     switch (line) {
       case 1:

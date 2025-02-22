@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDtA_t-gD0uVpAQ3aLtkcB3o1DM5rfhzwM',
-    appId: '1:399772241721:android:121e9f54228ead076de2e8',
-    messagingSenderId: '399772241721',
-    projectId: 'tazkarti-cf8a5',
-    storageBucket: 'tazkarti-cf8a5.firebasestorage.app',
+    apiKey: 'AIzaSyBkViLtXJgT_xz-7sDK0Mcrms9YFZ4ZwsE',
+    appId: '1:387085691376:android:760c5500c9e689fd559535',
+    messagingSenderId: '387085691376',
+    projectId: 'tazkartak',
+    storageBucket: 'tazkartak.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAimqqAKH4YOcWnM2lL-9oJcPdA7tZYkOQ',
-    appId: '1:399772241721:ios:77c79e543c4952866de2e8',
-    messagingSenderId: '399772241721',
-    projectId: 'tazkarti-cf8a5',
-    storageBucket: 'tazkarti-cf8a5.firebasestorage.app',
+    apiKey: 'AIzaSyD-_KQYfgnMzBGgCoHmZZuzwKq_wTDRFlA',
+    appId: '1:387085691376:ios:cdf34be21415eb28559535',
+    messagingSenderId: '387085691376',
+    projectId: 'tazkartak',
+    storageBucket: 'tazkartak.firebasestorage.app',
     iosBundleId: 'com.example.tazkartakApp',
   );
 
