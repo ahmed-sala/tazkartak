@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -34,6 +35,7 @@ void main() async {
   );
   Stripe.publishableKey =
       'pk_test_51NyZm3H430uC8PK4ORZUe1YkhG51UWI04EzIxCd10nyJAnJPIJTMMZ7Bb7zaYpR2pB5xHD5KIiKALFP0hps8UQhI00s3kNvI7A';
+  FirebaseDatabase database = FirebaseDatabase.instance;
 
   Bloc.observer = MyBlocObserver();
   runApp(const TazkartakApp());

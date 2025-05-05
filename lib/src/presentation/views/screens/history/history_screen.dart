@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:tazkartak_app/core/dependency_injection/di.dart';
 import 'package:tazkartak_app/src/presentation/mangers/history/history_cubit.dart';
 import 'package:tazkartak_app/src/presentation/mangers/history/history_state.dart';
@@ -126,8 +125,7 @@ class HistoryScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 8.h),
                               Text(
-                                DateFormat('yyyy-MM-dd – kk:mm')
-                                    .format(ticket.arrivalTime),
+                                ticket.arrivalTime,
                                 style: TextStyle(
                                   color: Colors.grey[600],
                                   fontSize: 14.sp,

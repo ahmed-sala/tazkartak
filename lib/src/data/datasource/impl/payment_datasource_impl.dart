@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:injectable/injectable.dart';
+import 'package:intl/intl.dart';
 import 'package:tazkartak_app/src/data/api/request/payment_request.dart';
 import 'package:tazkartak_app/src/data/models/ticket_model.dart';
 import 'package:tazkartak_app/src/data/models/ticket_model_with_id.dart';
@@ -14,10 +17,16 @@ import '../contract/payment_datasource.dart';
 @Injectable(as: PaymentDatasource)
 class PaymentDatasourceImpl implements PaymentDatasource {
   final StripeDioService stripeApiServices;
-  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  FirestoreService _firestoreService;
+  final FirestoreService _firestoreService;
 
-  PaymentDatasourceImpl(this.stripeApiServices, this._firestoreService) {
+  final DatabaseReference dbRef;
+
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  PaymentDatasourceImpl(
+    this.stripeApiServices,
+    this._firestoreService,
+  ) : dbRef = FirebaseDatabase.instance.ref('tickets') {
     Stripe.publishableKey = ApiConstants.publishableKey;
   }
   @override
@@ -52,8 +61,10 @@ class PaymentDatasourceImpl implements PaymentDatasource {
 
   @override
   Future<String> storeTicket(TicketModel ticket, String userId) async {
-    print('ticket: ${ticket.toJson()}');
-    TicketModelWithId ticketWithId = TicketModelWithId(
+    final formattedArrival =
+        DateFormat('yyyy-MM-dd HH:mm:ss').format(ticket.arrivalTime);
+
+    final ticketWithId = TicketModelWithId(
       noOfStations: ticket.noOfStations,
       price: ticket.price,
       fromStation: ticket.fromStation,
@@ -61,12 +72,20 @@ class PaymentDatasourceImpl implements PaymentDatasource {
       userId: userId,
       status: ticket.status,
       departureTime: ticket.departureTime,
-      arrivalTime: ticket.arrivalTime,
+      arrivalTime: formattedArrival,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
     );
-    var result = await _firestoreService.addNormalDocument(
-        'tickets', ticketWithId.toJson());
 
-    return result.id;
+    final firestoreResult = await _firestoreService.addNormalDocument(
+      'tickets',
+      ticketWithId.toJson(),
+    );
+    final docId = firestoreResult.id;
+    ticketWithId.ticketId = docId;
+
+    await dbRef.child(docId).set(ticketWithId.toJson());
+
+    return docId;
   }
 
   @override
@@ -91,17 +110,14 @@ class PaymentDatasourceImpl implements PaymentDatasource {
   @override
   Future<List<TicketModelWithId>> getAllTicketsByUserId(String userId) async {
     try {
-      // 1. Query for all ticket docs where userId == current user
       final docs = await _firestoreService.getQuerySnapshotsByField(
         'tickets',
         'userId',
         userId,
       );
 
-      // 2. Map each QueryDocumentSnapshot into your model (including the doc ID)
       return docs.map((docSnap) {
         final data = docSnap.data();
-        // Use your existing fromJson constructor, then assign the ticketId
         final ticket = TicketModelWithId.fromJson(data)..ticketId = docSnap.id;
         return ticket;
       }).toList();
@@ -113,8 +129,16 @@ class PaymentDatasourceImpl implements PaymentDatasource {
 
   @override
   Stream<TicketModel?> watchTicketById(String ticketId) {
-    return _firestoreService
-        .documentStream('tickets', ticketId)
-        .map((json) => json == null ? null : TicketModel.fromJson(json));
+    return dbRef.child(ticketId).onValue.map((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      if (data == null) return null;
+      final json = Map<String, dynamic>.from(data as Map);
+
+      if (json['arrivalTime'] is int) {
+        json['arrivalTime'] =
+            Timestamp.fromMillisecondsSinceEpoch(json['arrivalTime']);
+      }
+      return TicketModel.fromJson(json);
+    });
   }
 }

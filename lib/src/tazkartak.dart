@@ -36,7 +36,7 @@ class _TazkartakAppState extends State<TazkartakApp> {
     // // Perform initialization logic
     var userInfo = await getIt.get<SharedPreferences>().getString('userId');
     if (userInfo != null) {
-      _initialRoute = RoutesName.register;
+      _initialRoute = RoutesName.sectionScreen;
     } else {
       _initialRoute = RoutesName.login;
     }
