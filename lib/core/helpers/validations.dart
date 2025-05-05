@@ -36,7 +36,7 @@ abstract class Validations {
     if (password == null || password.isEmpty) {
       return 'Password is required!';
     } else if (!AppRegExp.isPasswordValid(password)) {
-      return 'Password must be at least 8 characters long and include uppercase, lowercase, a number, and a special character.';
+      return 'Password must be at least 8 characters long\nand include uppercase, lowercase, a number,\nand a special character.';
     }
     return null;
   }
@@ -45,7 +45,7 @@ abstract class Validations {
       String? password, String? confirmPassword) {
     if (confirmPassword!.isEmpty ||
         !AppRegExp.isPasswordValid(confirmPassword)) {
-      return 'Password must be at least 8 characters long and include uppercase, lowercase, a number, and a special character.';
+      return 'Password must be at least 8 characters long\nand include uppercase, lowercase, a number,\nand a special character.';
     } else if (password != confirmPassword) {
       return 'Password and Confirm Password must be same!';
     }
