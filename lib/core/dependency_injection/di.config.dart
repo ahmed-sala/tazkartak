@@ -25,6 +25,7 @@ import '../../src/data/repository/auth_repo_impl.dart' as _i644;
 import '../../src/data/repository/payment_repo_impl.dart' as _i132;
 import '../../src/domain/repository_contracts/auth_repo.dart' as _i146;
 import '../../src/domain/repository_contracts/payment_repo.dart' as _i305;
+import '../../src/domain/usecase/history_usecase.dart' as _i784;
 import '../../src/domain/usecase/login_usecase.dart' as _i601;
 import '../../src/domain/usecase/payment_usecase.dart' as _i863;
 import '../../src/domain/usecase/profile_usecase.dart' as _i117;
@@ -35,6 +36,9 @@ import '../../src/presentation/mangers/auth/profile/profile_viewmodel.dart'
     as _i902;
 import '../../src/presentation/mangers/auth/register/register_viewmodel.dart'
     as _i853;
+import '../../src/presentation/mangers/final_ticket/final_ticket_cubit.dart'
+    as _i571;
+import '../../src/presentation/mangers/history/history_cubit.dart' as _i724;
 import '../../src/presentation/mangers/payment/payment_cubit.dart' as _i177;
 import '../../src/presentation/mangers/section/home/home_cubit.dart' as _i446;
 import '../../src/presentation/mangers/section/section_Screen_viewmodel.dart'
@@ -100,6 +104,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i853.RegisterViewmodel(gh<_i293.RegisterUsecase>()));
     gh.factory<_i863.PaymentUsecase>(
         () => _i863.PaymentUsecase(gh<_i305.PaymentRepo>()));
+    gh.factory<_i784.HistoryUsecase>(
+        () => _i784.HistoryUsecase(gh<_i305.PaymentRepo>()));
+    gh.factory<_i724.HistoryCubit>(
+        () => _i724.HistoryCubit(gh<_i784.HistoryUsecase>()));
     gh.factory<_i902.ProfileViewmodel>(
         () => _i902.ProfileViewmodel(gh<_i117.ProfileUsecase>()));
     gh.factory<_i426.LoginViewmodel>(
@@ -109,6 +117,8 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i938.OpenRouteServiceApi>(),
           gh<_i863.PaymentUsecase>(),
         ));
+    gh.factory<_i571.FinalTicketCubit>(
+        () => _i571.FinalTicketCubit(gh<_i863.PaymentUsecase>()));
     gh.factory<_i177.PaymentCubit>(
         () => _i177.PaymentCubit(gh<_i863.PaymentUsecase>()));
     return this;

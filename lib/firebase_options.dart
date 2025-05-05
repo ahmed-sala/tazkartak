@@ -28,10 +28,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -58,6 +55,15 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyD-_KQYfgnMzBGgCoHmZZuzwKq_wTDRFlA',
+    appId: '1:387085691376:ios:cdf34be21415eb28559535',
+    messagingSenderId: '387085691376',
+    projectId: 'tazkartak',
+    storageBucket: 'tazkartak.firebasestorage.app',
+    iosBundleId: 'com.example.tazkartakApp',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyD-_KQYfgnMzBGgCoHmZZuzwKq_wTDRFlA',
     appId: '1:387085691376:ios:cdf34be21415eb28559535',
     messagingSenderId: '387085691376',

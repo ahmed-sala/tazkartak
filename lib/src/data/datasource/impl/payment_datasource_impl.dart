@@ -54,13 +54,18 @@ class PaymentDatasourceImpl implements PaymentDatasource {
   Future<String> storeTicket(TicketModel ticket, String userId) async {
     print('ticket: ${ticket.toJson()}');
     TicketModelWithId ticketWithId = TicketModelWithId(
-        noOfStations: ticket.noOfStations,
-        price: ticket.price,
-        fromStation: ticket.fromStation,
-        toStation: ticket.toStation,
-        userId: userId);
+      noOfStations: ticket.noOfStations,
+      price: ticket.price,
+      fromStation: ticket.fromStation,
+      toStation: ticket.toStation,
+      userId: userId,
+      status: ticket.status,
+      departureTime: ticket.departureTime,
+      arrivalTime: ticket.arrivalTime,
+    );
     var result = await _firestoreService.addNormalDocument(
         'tickets', ticketWithId.toJson());
+
     return result.id;
   }
 
@@ -71,5 +76,45 @@ class PaymentDatasourceImpl implements PaymentDatasource {
       throw Exception('No user is signed in');
     }
     return user.uid;
+  }
+
+  @override
+  Future<TicketModel?> getTicketById(String ticketId) async {
+    var result = _firestoreService.getDocumentById('tickets', ticketId);
+
+    var ticketModel = TicketModel.fromJson(await result);
+    print('🔍 Firestore raw result: ${ticketModel.fromStation}');
+
+    return ticketModel;
+  }
+
+  @override
+  Future<List<TicketModelWithId>> getAllTicketsByUserId(String userId) async {
+    try {
+      // 1. Query for all ticket docs where userId == current user
+      final docs = await _firestoreService.getQuerySnapshotsByField(
+        'tickets',
+        'userId',
+        userId,
+      );
+
+      // 2. Map each QueryDocumentSnapshot into your model (including the doc ID)
+      return docs.map((docSnap) {
+        final data = docSnap.data();
+        // Use your existing fromJson constructor, then assign the ticketId
+        final ticket = TicketModelWithId.fromJson(data)..ticketId = docSnap.id;
+        return ticket;
+      }).toList();
+    } catch (e) {
+      print('Error fetching tickets for user $userId: $e');
+      throw Exception('Could not load tickets: $e');
+    }
+  }
+
+  @override
+  Stream<TicketModel?> watchTicketById(String ticketId) {
+    return _firestoreService
+        .documentStream('tickets', ticketId)
+        .map((json) => json == null ? null : TicketModel.fromJson(json));
   }
 }

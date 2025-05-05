@@ -18,7 +18,7 @@ class DateInputField extends StatelessWidget {
     Key? key,
     required this.selectedDate,
     required this.onDateSelected,
-    this.labelText = 'Date Earned',
+    this.labelText = 'Birth Date',
     this.height = 70.0,
   }) : super(key: key);
 

@@ -88,4 +88,59 @@ class FirestoreService {
       throw Exception('Error fetching document by field: $e');
     }
   }
+
+  Future<List<Map<String, dynamic>>> getAllDocumentsByField(
+      String collectionPath, String field, dynamic value) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection(collectionPath)
+          .where(field, isEqualTo: value)
+          .get();
+
+      return querySnapshot.docs.map((doc) => doc.data()).toList();
+    } catch (e) {
+      throw Exception('Error fetching documents by field: $e');
+    }
+  }
+
+  Future<String> getIdByField(
+      String collectionPath, String field, dynamic value) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection(collectionPath)
+          .where(field, isEqualTo: value)
+          .limit(1) // Limit to first match
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        var doc = querySnapshot.docs.first;
+        return doc.id;
+      }
+      return '';
+    } catch (e) {
+      throw Exception('Error fetching document by field: $e');
+    }
+  }
+
+  Stream<Map<String, dynamic>?> documentStream(
+      String collectionPath, String docId) {
+    return _firestore
+        .collection(collectionPath)
+        .doc(docId)
+        .snapshots()
+        .map((snapshot) => snapshot.exists ? snapshot.data() : null);
+  }
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      getQuerySnapshotsByField(
+    String collectionPath,
+    String field,
+    dynamic value,
+  ) async {
+    final snapshot = await _firestore
+        .collection(collectionPath)
+        .where(field, isEqualTo: value)
+        .get();
+    return snapshot.docs;
+  }
 }

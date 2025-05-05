@@ -94,7 +94,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           child: Container(
                             width: 144,
                             height: 144,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.white,
                             ),
@@ -108,7 +108,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ),
                         verticalSpace(16),
-                        Center(
+                        const Center(
                           child: Text(
                             'Tazkartak',
                             style: TextStyle(
@@ -224,7 +224,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 verticalSpace(16),
                                 // Gender Selection
-                                GenderRadioButtonRow(),
+                                const GenderRadioButtonRow(),
                                 verticalSpace(16),
                                 // Create Account Button
                                 Center(
@@ -242,7 +242,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         verticalSpace(24),
                         // Divider with "OR"
-                        Row(
+                        const Row(
                           children: [
                             Expanded(
                               child: Divider(
@@ -270,7 +270,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         verticalSpace(26),
                         // Already have an account? Log in.
-                        Center(
+                        const Center(
                           child: SizedBox(
                             width: 283,
                             child: Text(

@@ -166,6 +166,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         toStation: resultRouteMetro.metro.last.name,
                         price: resultRouteMetro.price,
                         noOfStations: updatedLength.toString(),
+                        status: "Not Entered",
+                        departureTime: timeMetro.toString(),
+                        arrivalTime:
+                            DateTime.now().add(Duration(minutes: timeMetro)),
                       );
 
                       await homeView.storeTicket(ticket);
@@ -180,13 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           var updatedLength = resultRouteMetro.metro.length - 1;
 
                           return SuccessScreen(
-                            fromStation: resultRouteMetro.metro.first.name,
-                            toStation: resultRouteMetro.metro.last.name,
-                            price: resultRouteMetro.price,
-                            numberOfStations: updatedLength.toString(),
-                            departureTime: timeMetro.toString(),
-                            arrivalTime: DateTime.now()
-                                .add(Duration(minutes: timeMetro)),
+                            ticketId: homeView.ticketId ?? '',
                           );
                         },
                       ));

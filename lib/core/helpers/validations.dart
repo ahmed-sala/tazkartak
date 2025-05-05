@@ -33,10 +33,10 @@ abstract class Validations {
   }
 
   static String? validatePassword(String? password) {
-    if (password!.isEmpty) {
+    if (password == null || password.isEmpty) {
       return 'Password is required!';
     } else if (!AppRegExp.isPasswordValid(password)) {
-      return 'Invalid Password!';
+      return 'Password must be at least 8 characters long and include uppercase, lowercase, a number, and a special character.';
     }
     return null;
   }
@@ -45,7 +45,7 @@ abstract class Validations {
       String? password, String? confirmPassword) {
     if (confirmPassword!.isEmpty ||
         !AppRegExp.isPasswordValid(confirmPassword)) {
-      return 'Confirm Password is required!';
+      return 'Password must be at least 8 characters long and include uppercase, lowercase, a number, and a special character.';
     } else if (password != confirmPassword) {
       return 'Password and Confirm Password must be same!';
     }

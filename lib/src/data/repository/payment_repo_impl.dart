@@ -5,6 +5,7 @@ import 'package:tazkartak_app/src/data/datasource/contract/payment_datasource.da
 import 'package:tazkartak_app/src/data/models/ticket_model.dart';
 
 import '../../domain/repository_contracts/payment_repo.dart';
+import '../models/ticket_model_with_id.dart';
 
 @Injectable(as: PaymentRepo)
 class PaymentRepoImpl implements PaymentRepo {
@@ -23,5 +24,25 @@ class PaymentRepoImpl implements PaymentRepo {
       var id = await paymentDatasource.getUserId();
       return await paymentDatasource.storeTicket(ticket, id);
     });
+  }
+
+  @override
+  Future<ApiResult<TicketModel?>> getTicketById(String ticketId) async {
+    return await executeApi<TicketModel?>(apiCall: () async {
+      return await paymentDatasource.getTicketById(ticketId);
+    });
+  }
+
+  @override
+  Future<ApiResult<List<TicketModelWithId>?>> getAllTicketsByUserId() {
+    return executeApi<List<TicketModelWithId>?>(apiCall: () async {
+      var id = await paymentDatasource.getUserId();
+      return await paymentDatasource.getAllTicketsByUserId(id);
+    });
+  }
+
+  @override
+  Stream<TicketModel?> watchTicketById(String ticketId) {
+    return paymentDatasource.watchTicketById(ticketId);
   }
 }

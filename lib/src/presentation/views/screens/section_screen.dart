@@ -68,7 +68,9 @@ class _HomeScreenState extends State<SectionScreen> {
                 elevation: 15,
                 items: [
                   _buildBottomNavItem(Icons.home, "Home"),
-                  _buildBottomNavItem(Icons.receipt_outlined, "Orders"),
+                  _buildBottomNavItem(Icons.receipt_outlined, "Line Metro"),
+                  _buildBottomNavItem(
+                      Icons.history_toggle_off_outlined, "History"),
                   _buildBottomNavItem(Icons.person_outline, "Profile"),
                 ],
               ),

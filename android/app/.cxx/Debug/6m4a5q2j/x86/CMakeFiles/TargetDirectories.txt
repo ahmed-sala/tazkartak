@@ -1,0 +1,2 @@
+G:/tazkartak_app/android/app/.cxx/Debug/6m4a5q2j/x86/CMakeFiles/edit_cache.dir
+G:/tazkartak_app/android/app/.cxx/Debug/6m4a5q2j/x86/CMakeFiles/rebuild_cache.dir

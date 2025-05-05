@@ -16,4 +16,12 @@ class PaymentUsecase {
   Future<ApiResult<String>> executeStoreTicket(TicketModel ticket) async {
     return await paymentRepo.storeTicket(ticket);
   }
+
+  Future<ApiResult<TicketModel?>> executeGetTicketById(String ticketId) async {
+    return await paymentRepo.getTicketById(ticketId);
+  }
+
+  Stream<TicketModel?> watchTicketById(String ticketId) {
+    return paymentRepo.watchTicketById(ticketId);
+  }
 }

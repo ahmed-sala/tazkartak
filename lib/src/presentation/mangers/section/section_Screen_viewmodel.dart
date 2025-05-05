@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:tazkartak_app/src/presentation/mangers/section/section_screen_states.dart';
+import 'package:tazkartak_app/src/presentation/views/screens/history/history_screen.dart';
 import 'package:tazkartak_app/src/presentation/views/screens/profile_screen.dart';
 
 import '../../views/screens/home/home_screen.dart';
@@ -25,7 +26,8 @@ class SectionScreenViewmodel extends Cubit<SectionScreenState> {
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    LineMetro(),
+    const LineMetro(),
+    HistoryScreen(),
     ProfileScreen(),
   ];
 

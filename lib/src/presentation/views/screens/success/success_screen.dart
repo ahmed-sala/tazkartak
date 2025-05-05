@@ -1,88 +1,24 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-// If using qr_flutter >= 5.0.0, import:
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:tazkartak_app/src/presentation/mangers/section/home/home_cubit.dart';
+import 'package:tazkartak_app/core/dependency_injection/di.dart';
+import 'package:tazkartak_app/src/data/models/ticket_model.dart';
+import 'package:tazkartak_app/src/domain/usecase/payment_usecase.dart';
 
 class SuccessScreen extends StatelessWidget {
-  final String fromStation;
-  final String toStation;
-
-  final String price;
-  final String numberOfStations;
-  final String departureTime;
-  final DateTime arrivalTime;
-
   const SuccessScreen({
     Key? key,
-    required this.fromStation,
-    required this.toStation,
-    required this.price,
-    required this.numberOfStations,
-    required this.departureTime,
-    required this.arrivalTime,
+    required this.ticketId,
   }) : super(key: key);
+
+  final String ticketId;
 
   @override
   Widget build(BuildContext context) {
-    var homeCubit = context.read<HomeCubit>();
-    var ticketsIds = [
-      "123456",
-      "234567",
-      "345678",
-      "456789",
-      "567890",
-      "678901",
-      "789012",
-      "890123",
-      "901234",
-      "012345",
-      "111222",
-      "222333",
-      "333444",
-      "444555",
-      "555666",
-      "666777",
-      "777888",
-      "888999",
-      "999000",
-      "000111",
-      "135790",
-      "246802",
-      "987654",
-      "876543",
-      "765432",
-      "654321",
-      "543210",
-      "102938",
-      "564738",
-      "019283",
-      "102938",
-      "564738",
-      "019283",
-      "847362",
-      "726451",
-      "615243",
-      "504132",
-      "908172",
-      "817263",
-      "726354",
-      "635241",
-      "524130",
-      "413029",
-      "302918",
-      "291807",
-      "180796",
-      "069685",
-      "958574",
-      "847463",
-      "736352"
-    ];
-    var random = new Random();
-    var ticketId = ticketsIds[random.nextInt(ticketsIds.length)];
+    // grab your use‐case from DI:
+    final usecase = getIt<PaymentUsecase>();
+    // listen to the Firestore snapshot stream:
+    final ticketStream = usecase.watchTicketById(ticketId);
 
     return Container(
       decoration: BoxDecoration(
@@ -97,209 +33,206 @@ class SuccessScreen extends StatelessWidget {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        // Removing the default AppBar in favor of a custom header inside a gradient background.
         body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                // Custom Header
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          child: StreamBuilder<TicketModel?>(
+            stream: ticketStream,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    'Error: ${snapshot.error}',
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                );
+              }
+              final ticket = snapshot.data;
+              if (ticket == null) {
+                return const Center(child: Text('Ticket not found'));
+              }
+
+              // unpack fields
+              final fromStation = ticket.fromStation;
+              final toStation = ticket.toStation;
+              final status = ticket.status;
+              final price = ticket.price;
+              final departureTime = ticket.departureTime;
+              final arrivalTime = ticket.arrivalTime;
+
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                      'Confirmation',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                    const Center(
+                      child: Text(
+                        'Confirmation',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Center(
+                      child: Text(
+                        'Your Ticket is Confirmed!',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            // From / Departure
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'From',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Text(fromStation),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    const Text(
+                                      'Onboarding',
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                    Text(
+                                      '$departureTime Minute',
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+
+                            // To / Arrival
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'To',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Text(toStation),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    const Text(
+                                      'Arrival',
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                    Text(
+                                      DateFormat('EEE h:mm')
+                                          .format(arrivalTime),
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 24),
+
+                            // QR Code
+                            Center(
+                              child: QrImageView(
+                                data: ticketId,
+                                version: QrVersions.auto,
+                                size: 200,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+
+                            // Status
+                            Row(
+                              children: [
+                                const Text(
+                                  'Status: ',
+                                  style: TextStyle(fontWeight: FontWeight.w400),
+                                ),
+                                Text(
+                                  status,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            const Divider(),
+                            const SizedBox(height: 8),
+
+                            // Total Price
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Total',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  'EGP $price',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.deepPurple,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 24,
+                        ),
+                      ),
+                      child: const Text(
+                        'Done',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                Text(
-                  'Your Ticket is Confirmed!',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                // Ticket Details Card
-                Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  margin: const EdgeInsets.symmetric(horizontal: 0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        // From & Departure Row
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'From\n$fromStation',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Onboarding\n$departureTime Minute',
-                                textAlign: TextAlign.end,
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        // To & Arrival Row
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'To\n$toStation',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Arrival\n${DateFormat('EEE h:mm').format(arrivalTime)}',
-                                textAlign: TextAlign.end,
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        // QR Code & Ticket Information
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: QrImageView(
-                                data: ticketId,
-                                version: QrVersions.auto,
-                                size: 100,
-                                gapless: false,
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              flex: 4,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Ticket ID',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                  Text(
-                                    ticketId,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  const Text(
-                                    'Price',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                  Text(
-                                    'EGP $price',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.green,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  const Text(
-                                    'Stations',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                  Text(
-                                    '$numberOfStations station(s)',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        const Divider(),
-                        const SizedBox(height: 8),
-                        // Total Row
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Total',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            Text(
-                              'EGP $price',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.deepPurple,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                // Done Button
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 24,
-                    ),
-                  ),
-                  child: const Text(
-                    'Done',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),

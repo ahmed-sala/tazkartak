@@ -31,7 +31,7 @@ class HomeCubit extends Cubit<HomeState> {
   double userLongitude = 0;
   double userLatitude = 0;
   List<LatLng> routesPoint = [];
-  String ticketId = "";
+  String? ticketId;
 
   Future<void> doAction({required HomeAction homeAction}) async {
     switch (homeAction) {
@@ -171,6 +171,7 @@ class HomeCubit extends Cubit<HomeState> {
       switch (result) {
         case Success<String>():
           ticketId = result.data!;
+          print('ticketId: $ticketId');
           emit(SaveTiketSuccessState());
 
         case Failures<String>():

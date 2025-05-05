@@ -16,17 +16,19 @@ class _GenderRadioButtonRowState extends State<GenderRadioButtonRow> {
     final viewModel = context.read<RegisterViewmodel>();
     return Row(
       children: [
-        Text(
+        // Section Label
+        const Text(
           'Gender',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
         ),
+        const SizedBox(width: 12),
+
+        // Male option with blue styling
         Radio<Gender>(
-          fillColor: MaterialStateProperty.all(Colors.white),
-          activeColor: Colors.white,
           value: Gender.male,
           groupValue: viewModel.selectedGender,
           onChanged: (value) {
@@ -34,36 +36,36 @@ class _GenderRadioButtonRowState extends State<GenderRadioButtonRow> {
               viewModel.selectedGender = value!;
             });
           },
+          fillColor: MaterialStateProperty.all(Colors.black),
+          activeColor: Colors.black,
         ),
-        Text(
+        const Text(
           'Male',
           style: TextStyle(
-            color: Colors.white,
             fontSize: 16,
             fontWeight: FontWeight.w500,
+            color: Colors.black,
           ),
         ),
+        const SizedBox(width: 20),
+
+        // Female option with pink styling
         Radio<Gender>(
-          fillColor: MaterialStateProperty.all(Colors.white),
-          activeColor: Colors.white,
           value: Gender.female,
           groupValue: viewModel.selectedGender,
           onChanged: (value) {
-            setState(
-              () {
-                viewModel.selectedGender = value!;
-              },
-            );
+            setState(() {
+              viewModel.selectedGender = value!;
+            });
           },
+          fillColor: MaterialStateProperty.all(Colors.black),
+          activeColor: Colors.black,
         ),
-        Text(
+        const Text(
           'Female',
           style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        )
+              fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
+        ),
       ],
     );
   }
